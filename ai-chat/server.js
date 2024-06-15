@@ -3,21 +3,20 @@ import cors from "cors";
 import { OpenAI } from "openai";
 
 const app = express();
-const port = process.env.PORT || 3005;
+const port = process.env.PORT || 3006; // Use a different port if necessary
 const apiKey = process.env.VITE_OPEN_AI_KEY;
 const openai = new OpenAI({ apiKey: apiKey });
 
 app.use(cors());
-app.use(express.json()); 
+app.use(express.json());
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
 let conversationHistory = [];
 
-// Here, we define the '/chatbot' route to handle questions from our frontend React application
 app.post("/chatbot", async (req, res) => {
-  const { question } = req.body;
+  const { question, systemPrompt } = req.body;
   console.log("Received question:", question);
   console.log("Conversation history before:", conversationHistory);
 
@@ -27,17 +26,17 @@ app.post("/chatbot", async (req, res) => {
     messages: [
       {
         role: "system",
-        content: "You are the best friend ever, asking questions and wanting to help.",
+        content: systemPrompt || "You are the best friend ever, asking questions and wanting to help.",
       },
       ...conversationHistory,
     ],
-    model: "gpt-3.5-turbo", // Ensure this is the correct model name
+    model: "gpt-3.5-turbo",
     max_tokens: 300,
   });
 
   const chatbotResponse = response.choices[0].message.content;
   conversationHistory.push({ role: "assistant", content: chatbotResponse });
-  
+
   console.log("Chatbot response:", chatbotResponse);
   console.log("Conversation history after:", conversationHistory);
 
