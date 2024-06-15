@@ -43,30 +43,26 @@ body {
   border-radius: 5px;
 }
 
-.user-message {
-  text-align: left;
+.user-message, .bot-message, .system-message {
+  display: flex;
+  align-items: flex-start;
   margin: 10px 0;
   padding: 10px;
-  background-color: #007bff;
   border-radius: 5px;
+}
+
+.user-message {
+  background-color: #007bff;
   color: white;
 }
 
 .bot-message {
-  text-align: left;
-  margin: 10px 0;
-  padding: 10px;
   background-color: #6c757d;
-  border-radius: 5px;
   color: white;
 }
 
 .system-message {
-  text-align: left;
-  margin: 10px 0;
-  padding: 10px;
   background-color: #ffcc00;
-  border-radius: 5px;
   color: black;
 }
 
@@ -99,4 +95,28 @@ button {
 
 button:hover {
   background-color: #4B0082; /* Darker shade of purple */
+}
+
+/* Markdown Styling */
+.markdown pre {
+  background-color: #2d2d2d;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+.markdown code {
+  background-color: #2d2d2d;
+  color: #f8f8f2;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.markdown p {
+  margin: 0; /* Remove margin to avoid extra spacing */
+  padding: 0; /* Ensure no padding interferes */
+}
+
+.markdown strong {
+  font-weight: bold;
 }
