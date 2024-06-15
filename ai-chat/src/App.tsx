@@ -22,6 +22,8 @@ function App() {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
 
   const handleSubmit = async () => {
+    if (value.trim() === "") return;
+
     const userMessage = { role: "user", content: value };
     const newConversation = [...conversation, userMessage];
     setConversation(newConversation);
@@ -34,6 +36,7 @@ function App() {
     setConversation([...newConversation, assistantMessage]);
 
     setResponse(response.data);
+    setValue("");
   };
 
   const handlePromptChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -49,6 +52,12 @@ function App() {
       setSystemPrompt(customPrompt);
     }
   }, [customPrompt, selectedPrompt]);
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  };
 
   const components = {
     code({ node, inline, className, children, ...props }) {
@@ -91,13 +100,12 @@ function App() {
         <div className="chat-box">
           {conversation.map((msg, index) => (
             <div key={index} className={msg.role === "user" ? "user-message" : msg.role === "assistant" ? "bot-message" : "system-message"}>
-              <strong>{msg.role === "user" ? "User: " : msg.role === "assistant" ? "Bot: " : "System: "}</strong>
-              <ReactMarkdown components={components} className="markdown">{msg.content}</ReactMarkdown>
+              <strong>{msg.role === "user" ? "User: " : msg.role === "assistant" ? "AI: " : "System: "}</strong> <ReactMarkdown components={components} className="markdown">{msg.content}</ReactMarkdown>
             </div>
           ))}
         </div>
         <div className="input-container">
-          <input type="text" value={value} onChange={onChange} />
+          <input type="text" value={value} onChange={onChange} onKeyPress={handleKeyPress} />
           <button onClick={handleSubmit}>Send</button>
         </div>
       </div>
