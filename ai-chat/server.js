@@ -1,5 +1,3 @@
-// server.js
-
 import express from "express";
 import cors from "cors";
 import { OpenAI } from "openai";
@@ -15,35 +13,33 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
-// Here, we define the '/chatbot' route to handle questions from our 
-// frontend React application
+let conversationHistory = [];
+
+// Here, we define the '/chatbot' route to handle questions from our frontend React application
 app.post("/chatbot", async (req, res) => {
-// The 'question' variable is the user's input from the frontend
   const { question } = req.body;
-  // Here is where we communicate with the OpenAI API to create our chatbot.
-  // We store the chatbot's response in the 'response' variable
+  console.log("Received question:", question);
+  console.log("Conversation history before:", conversationHistory);
+
+  conversationHistory.push({ role: "user", content: question });
+
   const response = await openai.chat.completions.create({
     messages: [
-  // We give the chatbot a role with some content to determine how it will behave
       {
         role: "system",
-        content:
-          "You are the best friend ever, asking questions and wanting to help.",
+        content: "You are the best friend ever, asking questions and wanting to help.",
       },
-  // We ask the chatbot to generate an answer based on the user's question
-  // Remember, this question will come from the frontend
-      {
-        role: "user",
-        content: question,
-      },
+      ...conversationHistory,
     ],
-  // We choose the model we want to use for our chatbot
-    model: "gpt-3.5-turbo",
-  // We add a value for max_tokens to ensure the response won't exceed 300 tokens
-  // This is to make sure the responses aren't too long
+    model: "gpt-3.5-turbo", // Ensure this is the correct model name
     max_tokens: 300,
   });
-// Then we take the text response and display it on the server
-// Note: This will only work once we set up our frontend logic
-  res.send(response.choices[0].message.content);
+
+  const chatbotResponse = response.choices[0].message.content;
+  conversationHistory.push({ role: "assistant", content: chatbotResponse });
+  
+  console.log("Chatbot response:", chatbotResponse);
+  console.log("Conversation history after:", conversationHistory);
+
+  res.send(chatbotResponse);
 });
