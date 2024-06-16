@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import Prism from "prismjs";
+import "prismjs/themes/prism-tomorrow.css";
+import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-python";
+import "prismjs/components/prism-typescript";
 import "./App.css";
 
 function App() {
@@ -62,11 +65,15 @@ function App() {
 
   const components = {
     code({ node, inline, className, children, ...props }) {
+      useEffect(() => {
+        Prism.highlightAll();
+      }, [children]);
+
       const match = /language-(\w+)/.exec(className || '');
       return !inline && match ? (
-        <SyntaxHighlighter style={materialDark} language={match[1]} PreTag="div" {...props}>
-          {String(children).replace(/\n$/, '')}
-        </SyntaxHighlighter>
+        <pre className={className} {...props}>
+          <code className={`language-${match[1]}`}>{String(children).replace(/\n$/, '')}</code>
+        </pre>
       ) : (
         <code className={className} {...props}>
           {children}
