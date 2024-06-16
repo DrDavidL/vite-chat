@@ -117,6 +117,15 @@ button:hover {
   padding: 0; /* Ensure no padding interferes */
 }
 
+.markdown ul, .markdown ol {
+  padding-left: 20px;
+  margin: 0; /* Remove margin to avoid extra spacing */
+}
+
+.markdown li {
+  margin-bottom: 5px;
+}
+
 .markdown strong {
   font-weight: bold;
 }

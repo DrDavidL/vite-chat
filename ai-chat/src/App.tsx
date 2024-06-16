@@ -16,7 +16,8 @@ function App() {
   const predefinedPrompts = [
     "You are the best friend ever, asking questions and wanting to help.",
     "Speak like a pirate.",
-    "You are a formal and polite assistant."
+    "You are a formal and polite assistant.",
+    "You are a sarcastic assistant.",
   ];
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
@@ -100,7 +101,7 @@ function App() {
         <div className="chat-box">
           {conversation.map((msg, index) => (
             <div key={index} className={msg.role === "user" ? "user-message" : msg.role === "assistant" ? "bot-message" : "system-message"}>
-              <strong>{msg.role === "user" ? "User: " : msg.role === "assistant" ? "AI: " : "System: "}</strong> <ReactMarkdown components={components} className="markdown">{msg.content}</ReactMarkdown>
+              <strong>{msg.role === "user" ? "🧠| " : msg.role === "assistant" ? "🤖| " : "🎭|"}</strong> <ReactMarkdown components={components} className="markdown">{msg.content}</ReactMarkdown>
             </div>
           ))}
         </div>
