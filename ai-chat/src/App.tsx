@@ -78,7 +78,9 @@ function App() {
   return (
     <div className="app-container">
       <div className="settings">
-        <h2>Settings</h2>
+        <h2>Vite Chat</h2>
+        <h3 style={{ fontSize: '14px' }}>Author: David Liebovitz</h3>
+        <h3>Settings</h3>
         <div>
           <label>System Prompt:</label>
           <select value={selectedPrompt} onChange={handlePromptChange}>
@@ -101,7 +103,7 @@ function App() {
         <div className="chat-box">
           {conversation.map((msg, index) => (
             <div key={index} className={msg.role === "user" ? "user-message" : msg.role === "assistant" ? "bot-message" : "system-message"}>
-              <strong>{msg.role === "user" ? "🧠| " : msg.role === "assistant" ? "🤖| " : "🎭|"}</strong> <ReactMarkdown components={components} className="markdown">{msg.content}</ReactMarkdown>
+              <strong>{msg.role === "user" ? "🙋🏽| " : msg.role === "assistant" ? "🤖| " : "🎭|"}</strong> <ReactMarkdown components={components} className="markdown">{msg.content}</ReactMarkdown>
             </div>
           ))}
         </div>
