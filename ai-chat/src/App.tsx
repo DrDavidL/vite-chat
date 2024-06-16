@@ -15,6 +15,7 @@ function App() {
   const [systemPrompt, setSystemPrompt] = useState<string>("You are the best friend ever, asking questions and wanting to help.");
   const [customPrompt, setCustomPrompt] = useState<string>("");
   const [selectedPrompt, setSelectedPrompt] = useState<string>("0");
+  const [pendingPrompt, setPendingPrompt] = useState<string>("You are the best friend ever, asking questions and wanting to help.");
 
   const predefinedPrompts = [
     "You are the best friend ever, asking questions and wanting to help.",
@@ -47,13 +48,17 @@ function App() {
     const newPromptIndex = e.target.value;
     setSelectedPrompt(newPromptIndex);
     const newPrompt = newPromptIndex === "custom" ? customPrompt : predefinedPrompts[parseInt(newPromptIndex)];
-    setSystemPrompt(newPrompt);
-    setConversation([...conversation, { role: "system", content: newPrompt }]);
+    setPendingPrompt(newPrompt);
+  };
+
+  const handleUpdatePersona = () => {
+    setSystemPrompt(pendingPrompt);
+    setConversation([...conversation, { role: "system", content: pendingPrompt }]);
   };
 
   useEffect(() => {
     if (selectedPrompt === "custom") {
-      setSystemPrompt(customPrompt);
+      setPendingPrompt(customPrompt);
     }
   }, [customPrompt, selectedPrompt]);
 
@@ -104,6 +109,7 @@ function App() {
               cols={30}
             />
           )}
+          <button onClick={handleUpdatePersona}>Update Persona</button>
         </div>
       </div>
       <div className="chat-container">
