@@ -16,6 +16,8 @@ function App() {
   const [customPrompt, setCustomPrompt] = useState<string>("");
   const [selectedPrompt, setSelectedPrompt] = useState<string>("0");
   const [pendingPrompt, setPendingPrompt] = useState<string>("You are the best friend ever, asking questions and wanting to help.");
+  const [darkMode, setDarkMode] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const predefinedPrompts = [
     "You are the best friend ever, asking questions and wanting to help.",
@@ -29,6 +31,7 @@ function App() {
   const handleSubmit = async () => {
     if (value.trim() === "") return;
 
+    setLoading(true);
     const userMessage = { role: "user", content: value };
     const newConversation = [...conversation, userMessage];
     setConversation(newConversation);
@@ -42,6 +45,7 @@ function App() {
 
     setResponse(response.data);
     setValue("");
+    setLoading(false);
   };
 
   const handlePromptChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -88,14 +92,14 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <div className="settings">
-        <h2>Vite Chat</h2>
-        <h3 style={{ fontSize: '14px' }}>Author: David Liebovitz</h3>
-        <h3>Settings</h3>
-        <div>
-          <label>System Prompt:</label>
-          <select value={selectedPrompt} onChange={handlePromptChange}>
+    <div className={darkMode ? "min-h-screen bg-gray-900 text-white flex" : "min-h-screen bg-white text-gray-900 flex"}>
+      <div className="settings p-4 w-1/4">
+        <h2 className="text-3xl font-bold">Vite Chat</h2>
+        <h3 className="text-xl">Author: David Liebovitz</h3>
+        <h3 className="text-lg mt-4">Settings</h3>
+        <div className="mt-2">
+          <label className="block text-sm">System Prompt:</label>
+          <select value={selectedPrompt} onChange={handlePromptChange} className={darkMode ? "w-full bg-gray-800 text-white p-2 rounded mt-1" : "w-full bg-gray-200 text-black p-2 rounded mt-1"}>
             {predefinedPrompts.map((prompt, index) => (
               <option key={index} value={index.toString()}>{prompt}</option>
             ))}
@@ -106,23 +110,30 @@ function App() {
               value={customPrompt}
               onChange={(e) => setCustomPrompt(e.target.value)}
               rows={4}
-              cols={30}
+              className={darkMode ? "w-full bg-gray-800 text-white p-2 rounded mt-1" : "w-full bg-gray-200 text-black p-2 rounded mt-1"}
             />
           )}
-          <button onClick={handleUpdatePersona}>Update Persona</button>
+          <button onClick={handleUpdatePersona} className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">
+            Update Persona
+          </button>
         </div>
       </div>
-      <div className="chat-container">
-        <div className="chat-box">
+      <div className="chat-container flex-grow p-4 w-3/4">
+        <button onClick={() => setDarkMode(!darkMode)} className={darkMode ? "mb-4 p-2 rounded bg-gray-800 text-white transition duration-300 ease-in-out hover:bg-gray-700" : "mb-4 p-2 rounded bg-gray-200 text-black transition duration-300 ease-in-out hover:bg-gray-300"}>
+          Toggle {darkMode ? "Light" : "Dark"} Mode
+        </button>
+        <div className="chat-box bg-gray-800 p-4 rounded-lg overflow-y-auto h-96">
           {conversation.map((msg, index) => (
-            <div key={index} className={msg.role === "user" ? "user-message" : msg.role === "assistant" ? "bot-message" : "system-message"}>
+            <div key={index} className={`p-2 mb-2 ${msg.role === "user" ? "bg-blue-600" : msg.role === "assistant" ? "bg-green-600" : "bg-gray-700"} rounded`}>
               <strong>{msg.role === "user" ? "🙋🏽| " : msg.role === "assistant" ? "🤖| " : "🎭|"}</strong> <ReactMarkdown components={components} className="markdown">{msg.content}</ReactMarkdown>
             </div>
           ))}
         </div>
-        <div className="input-container">
-          <input type="text" value={value} onChange={onChange} onKeyPress={handleKeyPress} />
-          <button onClick={handleSubmit}>Send</button>
+        <div className="input-container mt-4 flex">
+          <input type="text" value={value} onChange={onChange} onKeyPress={handleKeyPress} className={darkMode ? "w-full bg-gray-800 text-white p-2 rounded-l-lg" : "w-full bg-gray-200 text-black p-2 rounded-l-lg"} />
+          <button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r-lg" disabled={loading}>
+            {loading ? "Sending..." : "Send"}
+          </button>
         </div>
       </div>
     </div>
